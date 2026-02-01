@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kiana's Schedule</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    @page {
+      size: letter;
+      margin: 0.3in;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 10pt;
+      line-height: 1.3;
+      color: #333;
+      max-width: 8.5in;
+      margin: 0 auto;
+      padding: 0.3in;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      border-bottom: 2px solid #2c5282;
+      margin-bottom: 12px;
+    }
+
+    .tab {
+      padding: 8px 16px;
+      cursor: pointer;
+      background: #e2e8f0;
+      border: none;
+      border-radius: 6px 6px 0 0;
+      margin-right: 4px;
+      font-size: 10pt;
+      font-weight: 600;
+      color: #4a5568;
+    }
+
+    .tab:hover {
+      background: #cbd5e0;
+    }
+
+    .tab.active {
+      background: #2c5282;
+      color: white;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Print: hide tabs, show all */
+    @media print {
+      .tabs {
+        display: none;
+      }
+      .tab-content {
+        display: block !important;
+        page-break-after: always;
+      }
+      .tab-content:last-child {
+        page-break-after: avoid;
+      }
+      .page-title {
+        display: block !important;
+      }
+    }
+
+    .page-title {
+      display: none;
+      text-align: center;
+      font-size: 16pt;
+      font-weight: bold;
+      color: #2c5282;
+      margin-bottom: 8px;
+      padding-top: 10px;
+      border-top: 2px solid #2c5282;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 18pt;
+      margin-bottom: 4px;
+      color: #2c5282;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 9pt;
+      color: #666;
+      margin-bottom: 10px;
+    }
+
+    .pattern {
+      text-align: center;
+      background: #ebf8ff;
+      padding: 5px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      font-size: 10pt;
+    }
+
+    .pattern strong {
+      color: #2c5282;
+    }
+
+    /* Schedule Table */
+    .schedule-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 10px;
+      font-size: 10pt;
+    }
+
+    .schedule-table th {
+      background: #2c5282;
+      color: white;
+      padding: 5px 6px;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    .schedule-table td {
+      padding: 4px 6px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .schedule-table tr.feed-row {
+      background: #fff5f5;
+    }
+
+    .schedule-table tr.nap-row {
+      background: #ebf8ff;
+    }
+
+    .schedule-table tr.bed-row {
+      background: #f0fff4;
+      font-weight: 600;
+    }
+
+    .schedule-table .time {
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .schedule-table .window, .schedule-table .gap {
+      text-align: center;
+      color: #666;
+    }
+
+    /* Late wake reference */
+    .late-wake-box {
+      background: #faf5ff;
+      border: 1px solid #9f7aea;
+      border-radius: 6px;
+      padding: 6px;
+      margin-bottom: 10px;
+    }
+
+    .late-wake-box h3 {
+      font-size: 9pt;
+      color: #6b46c1;
+      margin-bottom: 2px;
+    }
+
+    .late-wake-note {
+      font-size: 8pt;
+      color: #666;
+      margin-bottom: 4px;
+    }
+
+    .late-wake-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 8pt;
+    }
+
+    .late-wake-table th {
+      background: #6b46c1;
+      color: white;
+      padding: 2px 3px;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .late-wake-table td {
+      padding: 2px 3px;
+      text-align: center;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .late-wake-table .normal-row { background: #f0fff4; }
+    .late-wake-table .late-row { background: #fffaf0; }
+    .late-wake-table .nap-dur { font-size: 7pt; color: #888; }
+
+    /* Two column layout */
+    .notes-container {
+      display: flex;
+      gap: 12px;
+    }
+
+    .notes-column {
+      flex: 1;
+    }
+
+    .notes-section {
+      margin-bottom: 8px;
+    }
+
+    .notes-section h3 {
+      font-size: 9pt;
+      color: #2c5282;
+      border-bottom: 2px solid #2c5282;
+      padding-bottom: 2px;
+      margin-bottom: 3px;
+    }
+
+    .notes-section ul, .notes-section ol {
+      padding-left: 14px;
+      font-size: 8pt;
+    }
+
+    .notes-section li {
+      margin-bottom: 1px;
+    }
+
+    .fixed-list li::marker { color: #c53030; }
+    .flexible-list li::marker { color: #2f855a; }
+
+    /* Boxes */
+    .priority-box {
+      background: #fffaf0;
+      border: 1px solid #ed8936;
+      border-radius: 6px;
+      padding: 6px;
+      margin-bottom: 8px;
+    }
+
+    .priority-box h3 {
+      font-size: 9pt;
+      color: #c05621;
+      margin-bottom: 3px;
+    }
+
+    .priority-box ol {
+      padding-left: 16px;
+      font-size: 8pt;
+    }
+
+    .tips-box {
+      background: #f0fff4;
+      border: 1px solid #68d391;
+      border-radius: 6px;
+      padding: 6px;
+      font-size: 8pt;
+    }
+
+    .tips-box h3 {
+      font-size: 9pt;
+      color: #276749;
+      margin-bottom: 3px;
+    }
+
+    .tips-box p {
+      margin-bottom: 2px;
+    }
+
+    /* Totals */
+    .totals {
+      font-size: 8pt;
+      text-align: center;
+      color: #666;
+      margin-bottom: 10px;
+    }
+
+    .totals span {
+      margin: 0 8px;
+    }
+
+    /* Transition-specific */
+    .transition-box {
+      background: #fff5f5;
+      border: 2px solid #fc8181;
+      border-radius: 6px;
+      padding: 8px;
+      margin-bottom: 10px;
+    }
+
+    .transition-box h3 {
+      font-size: 10pt;
+      color: #c53030;
+      margin-bottom: 4px;
+    }
+
+    .transition-box ul {
+      padding-left: 16px;
+      font-size: 9pt;
+    }
+
+    .changes-box {
+      background: #fffff0;
+      border: 1px solid #d69e2e;
+      border-radius: 6px;
+      padding: 8px;
+      margin-bottom: 10px;
+    }
+
+    .changes-box h3 {
+      font-size: 10pt;
+      color: #b7791f;
+      margin-bottom: 4px;
+    }
+
+    .changes-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9pt;
+    }
+
+    .changes-table th {
+      background: #d69e2e;
+      color: white;
+      padding: 4px 6px;
+      text-align: left;
+    }
+
+    .changes-table td {
+      padding: 3px 6px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .changes-table .old { color: #999; }
+    .changes-table .new { color: #2f855a; font-weight: 600; }
+
+    @media print {
+      body {
+        padding: 0;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Tabs (hidden when printing) -->
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('tab1')">3-Nap (6:30am)</button>
+    <button class="tab" onclick="showTab('tab2')">3-Nap (7am Simple)</button>
+    <button class="tab" onclick="showTab('tab3')">2-Nap Transition</button>
+  </div>
+
+  <!-- TAB 1: 3-Nap Schedule v1 (6:30am wake) -->
+  <div id="tab1" class="tab-content active">
+    <h1 class="page-title">3-Nap Schedule (6:30am Wake)</h1>
+    <h1>🍼 Kiana's Schedule</h1>
+    <p class="subtitle">5.5–6 months • 6:30am Wake</p>
+
+    <div class="pattern">
+      <strong>Pattern:</strong> Eat → Play → Sleep &nbsp;|&nbsp;
+      <strong>Total:</strong> 4 feeds × 7oz = 28oz
+    </div>
+
+    <table class="schedule-table">
+      <thead>
+        <tr>
+          <th style="width: 22%">Time</th>
+          <th style="width: 40%">Activity</th>
+          <th style="width: 19%">Wake Window</th>
+          <th style="width: 19%">Feed Gap</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="feed-row">
+          <td class="time">6:30am</td>
+          <td>Wake + FEED 1 (7oz)</td>
+          <td class="window">—</td>
+          <td class="gap">11h</td>
+        </tr>
+        <tr class="nap-row">
+          <td class="time">8:30–9:45am</td>
+          <td>NAP 1 (1.25h)</td>
+          <td class="window">2h</td>
+          <td class="gap">—</td>
+        </tr>
+        <tr class="feed-row">
+          <td class="time">10:30am</td>
+          <td>FEED 2 (7oz)</td>
+          <td class="window">—</td>
+          <td class="gap">4h</td>
+        </tr>
+        <tr class="nap-row">
+          <td class="time">12:00–1:30pm</td>
+          <td>NAP 2 (1.5h) ⭐</td>
+          <td class="window">2.25h</td>
+          <td class="gap">—</td>
+        </tr>
+        <tr class="feed-row">
+          <td class="time">2:15pm</td>
+          <td>FEED 3 (7oz)</td>
+          <td class="window">—</td>
+          <td class="gap">4h</td>
+        </tr>
+        <tr class="nap-row">
+          <td class="time">4:00–4:30pm</td>
+          <td>NAP 3 (0.5h)</td>
+          <td class="window">2.5h</td>
+          <td class="gap">—</td>
+        </tr>
+        <tr>
+          <td class="time">6:30pm</td>
+          <td>Bath</td>
+          <td class="window">—</td>
+          <td class="gap">—</td>
+        </tr>
+        <tr class="feed-row">
+          <td class="time">7:00pm</td>
+          <td>FEED 4 (7oz)</td>
+          <td class="window">—</td>
+          <td class="gap">4.75h</td>
+        </tr>
+        <tr class="bed-row">
+          <td class="time">7:30pm</td>
+          <td>🌙 BEDTIME (11h)</td>
+          <td class="window">3h</td>
+          <td class="gap">—</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="totals">
+      <span><strong>Day Sleep:</strong> 3.25h</span>
+      <span><strong>Night Sleep:</strong> 11h</span>
+      <span><strong>Total:</strong> 14.25h</span>
+    </div>
+
+    <div class="late-wake-box">
+      <h3>⏰ If She Wakes Late</h3>
+      <p class="late-wake-note">Late wake = more night sleep → cap naps shorter (keep wake windows normal)</p>
+      <table class="late-wake-table">
+        <thead>
+          <tr>
+            <th>Wake</th><th>Nap 1</th><th>Feed 2</th><th>Nap 2</th><th>Feed 3</th><th>Nap 3</th><th>Feed 4</th><th>Bed</th><th>Day Sleep</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="normal-row">
+            <td><strong>6:30am</strong></td>
+            <td>8:30<br><span class="nap-dur">1.25h</span></td>
+            <td>10:30</td>
+            <td>12:00<br><span class="nap-dur">1.5h</span></td>
+            <td>2:15</td>
+            <td>4:00<br><span class="nap-dur">0.5h</span></td>
+            <td>7:00</td>
+            <td>7:30</td>
+            <td>3.25h</td>
+          </tr>
+          <tr class="late-row">
+            <td><strong>7:00am</strong></td>
+            <td>9:00<br><span class="nap-dur">1h</span></td>
+            <td>10:45</td>
+            <td>12:15<br><span class="nap-dur">1.25h</span></td>
+            <td>2:30</td>
+            <td>4:15<br><span class="nap-dur">0.5h</span></td>
+            <td>7:00</td>
+            <td>7:45</td>
+            <td>2.75h</td>
+          </tr>
+          <tr class="late-row">
+            <td><strong>7:30am</strong></td>
+            <td>9:30<br><span class="nap-dur">0.75h</span></td>
+            <td>11:00</td>
+            <td>12:30<br><span class="nap-dur">1.25h</span></td>
+            <td>2:45</td>
+            <td>4:30<br><span class="nap-dur">0.5h</span></td>
+            <td>7:15</td>
+            <td>8:00</td>
+            <td>2.5h</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="notes-container">
+      <div class="notes-column">
+        <div class="notes-section">
+          <h3>🔒 Fixed (Non-Negotiable)</h3>
+          <ul class="fixed-list">
+            <li><strong>Wake:</strong> 6:30–7am (±30 min)</li>
+            <li><strong>Wake windows:</strong> 2 → 2.25 → 2.5 → 3h</li>
+            <li><strong>Last window:</strong> 3h</li>
+            <li><strong>Nap 2:</strong> Start 12–2pm</li>
+            <li><strong>Nap 3 end:</strong> By 5pm</li>
+            <li><strong>Bedtime:</strong> 7–8pm</li>
+            <li><strong>Day sleep:</strong> 2.25–3.5h</li>
+            <li><strong>Feed-to-crib:</strong> 20–30 min</li>
+          </ul>
+        </div>
+        <div class="priority-box">
+          <h3>⚡ Priority (When Off Track)</h3>
+          <ol>
+            <li>Bedtime (7–8pm)</li>
+            <li>Nap 2 timing (12–2pm)</li>
+            <li>Last wake window (3h)</li>
+            <li>Total daytime sleep</li>
+          </ol>
+        </div>
+      </div>
+      <div class="notes-column">
+        <div class="notes-section">
+          <h3>✅ Flexible</h3>
+          <ul class="flexible-list">
+            <li><strong>Nap 1/3 timing:</strong> Follow wake window</li>
+            <li><strong>Nap 1 location:</strong> 80% crib, 20% flexible</li>
+            <li><strong>Nap 3 location:</strong> Stroller/car OK</li>
+            <li><strong>Feed after wake:</strong> 0–45 min delay OK</li>
+            <li><strong>Feed gaps:</strong> 3–4h, up to 5h OK</li>
+          </ul>
+        </div>
+        <div class="tips-box">
+          <h3>💡 Quick Tips</h3>
+          <p><strong>⭐ Nap 2</strong> = anchor (always crib)</p>
+          <p><strong>Late wake?</strong> Cap naps, keep windows</p>
+          <p><strong>Nap 3 refused?</strong> Early bed (6–6:30pm)</p>
+          <p><strong>Wakes early?</strong> Dark/quiet until DWT</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: 3-Nap Schedule v2 (7am wake, simple times) -->
+  <div id="tab2" class="tab-content">
+    <h1 class="page-title">3-Nap Schedule (7am Simple)</h1>
+    <h1>🍼 Kiana's Schedule (v2)</h1>
+    <p class="subtitle">5.5–6 months • 7am Wake • Simple Feeds (7-11-3-7)</p>
+
+    <div class="pattern">
+      <strong>Pattern:</strong> Eat → Play → Sleep &nbsp;|&nbsp;
+      <strong>Feeds:</strong> 7am • 11am • 3pm • 7pm (4 × 7oz = 28oz)
+    </div>
+
+    <table class="schedule-table">
+      <thead>
+        <tr>
+          <th style="width: 22%">Time</th>
+          <th style="width: 40%">Activity</th>
+          <th style="width: 19%">Wake Window</th>
+          <th style="width: 19%">Feed Gap</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="feed-row">
+          <td class="time">7:00am</td>
+          <td>Wake + FEED 1 (7oz)</td>
+          <td class="window">—</td>
+          <td class="gap">12h</td>
+        </tr>
+        <tr class="nap-row">
+          <td class="time">9:00–10:00am</td>
+          <td>NAP 1 (1h)</td>
+          <td class="window">2h</td>
+          <td class="gap">—</td>
+        </tr>
+        <tr class="feed-row">
+          <td class="time">11:00am</td>
+          <td>FEED 2 (7oz)</td>
+          <td class="window">—</td>
+          <td class="gap">4h</td>
+        </tr>
+        <tr class="nap-row">
+          <td class="time">12:15–1:30pm</td>
+          <td>NAP 2 (1.25h) ⭐</td>
+          <td class="window">2.25h</td>
+          <td class="gap">—</td>
+        </tr>
+        <tr class="feed-row">
+          <td class="time">3:00pm</td>
+          <td>FEED 3 (7oz)</td>
+          <td class="window">—</td>
+          <td class="gap">4h</td>
+        </tr>
+        <tr class="nap-row">
+          <td class="time">4:00–4:30pm</td>
+          <td>NAP 3 (0.5h)</td>
+          <td class="window">2.5h</td>
+          <td class="gap">—</td>
+        </tr>
+        <tr>
+          <td class="time">6:30pm</td>
+          <td>Bath</td>
+          <td class="window">—</td>
+          <td class="gap">—</td>
+        </tr>
+        <tr class="feed-row">
+          <td class="time">7:00pm</td>
+          <td>FEED 4 (7oz)</td>
+          <td class="window">—</td>
+          <td class="gap">4h</td>
+        </tr>
+        <tr class="bed-row">
+          <td class="time">7:30pm</td>
+          <td>🌙 BEDTIME (11.5h)</td>
+          <td class="window">3h</td>
+          <td class="gap">—</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="totals">
+      <span><strong>Day Sleep:</strong> 2.75h</span>
+      <span><strong>Night Sleep:</strong> 11.5h</span>
+      <span><strong>Total:</strong> 14.25h</span>
+    </div>
+
+    <div class="late-wake-box">
+      <h3>⏰ If She Wakes Late</h3>
+      <p class="late-wake-note">Late wake = more night sleep → cap naps shorter (keep wake windows normal)</p>
+      <table class="late-wake-table">
+        <thead>
+          <tr>
+            <th>Wake</th><th>Nap 1</th><th>Feed 2</th><th>Nap 2</th><th>Feed 3</th><th>Nap 3</th><th>Feed 4</th><th>Bed</th><th>Day Sleep</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="normal-row">
+            <td><strong>7:00am</strong></td>
+            <td>9:00<br><span class="nap-dur">1h</span></td>
+            <td>11:00</td>
+            <td>12:15<br><span class="nap-dur">1.25h</span></td>
+            <td>3:00</td>
+            <td>4:00<br><span class="nap-dur">0.5h</span></td>
+            <td>7:00</td>
+            <td>7:30</td>
+            <td>2.75h</td>
+          </tr>
+          <tr class="late-row">
+            <td><strong>7:30am</strong></td>
+            <td>9:30<br><span class="nap-dur">0.75h</span></td>
+            <td>11:00</td>
+            <td>12:30<br><span class="nap-dur">1h</span></td>
+            <td>3:00</td>
+            <td>4:15<br><span class="nap-dur">0.5h</span></td>
+            <td>7:00</td>
+            <td>7:45</td>
+            <td>2.25h</td>
+          </tr>
+          <tr class="late-row">
+            <td><strong>8:00am</strong></td>
+            <td>10:00<br><span class="nap-dur">0.5h</span></td>
+            <td>11:00</td>
+            <td>12:45<br><span class="nap-dur">1h</span></td>
+            <td>3:00</td>
+            <td>4:30<br><span class="nap-dur">0.5h</span></td>
+            <td>7:00</td>
+            <td>8:00</td>
+            <td>2h</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="notes-container">
+      <div class="notes-column">
+        <div class="notes-section">
+          <h3>🔒 Fixed (Non-Negotiable)</h3>
+          <ul class="fixed-list">
+            <li><strong>Wake:</strong> 7:00am (±30 min)</li>
+            <li><strong>Wake windows:</strong> 2 → 2.25 → 2.5 → 3h</li>
+            <li><strong>Last window:</strong> 3h</li>
+            <li><strong>Nap 2:</strong> Start 12–2pm</li>
+            <li><strong>Nap 3 end:</strong> By 5pm</li>
+            <li><strong>Bedtime:</strong> 7–8pm</li>
+            <li><strong>Day sleep:</strong> 2.25–3.5h</li>
+            <li><strong>Feed-to-crib:</strong> 20–30 min</li>
+          </ul>
+        </div>
+        <div class="priority-box">
+          <h3>⚡ Priority (When Off Track)</h3>
+          <ol>
+            <li>Bedtime (7–8pm)</li>
+            <li>Nap 2 timing (12–2pm)</li>
+            <li>Last wake window (3h)</li>
+            <li>Total daytime sleep</li>
+          </ol>
+        </div>
+      </div>
+      <div class="notes-column">
+        <div class="notes-section">
+          <h3>✅ Flexible</h3>
+          <ul class="flexible-list">
+            <li><strong>Nap 1/3 timing:</strong> Follow wake window</li>
+            <li><strong>Nap 1 location:</strong> 80% crib, 20% flexible</li>
+            <li><strong>Nap 3 location:</strong> Stroller/car OK</li>
+            <li><strong>Feed after wake:</strong> 0–45 min delay OK</li>
+            <li><strong>Feed gaps:</strong> 3–4h, up to 5h OK</li>
+          </ul>
+        </div>
+        <div class="tips-box">
+          <h3>💡 Quick Tips</h3>
+          <p><strong>⭐ Nap 2</strong> = anchor (always crib)</p>
+          <p><strong>Late wake?</strong> Cap naps, keep windows</p>
+          <p><strong>Nap 3 refused?</strong> Early bed (6–6:30pm)</p>
+          <p><strong>Wakes early?</strong> Dark/quiet until 7am</p>
+          <p><strong>Note:</strong> Feed 2 is 1hr after wake, Feed 3 is 1.5hr after wake — watch for fussiness</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: 2-Nap Transition -->
+  <div id="tab3" class="tab-content">
+    <h1 class="page-title">2-Nap Transition (6-8 months)</h1>
+    <h1>🔄 2-Nap Transition</h1>
+    <p class="subtitle">6–8 months • When Nap 3 is consistently refused</p>
+
+    <div class="transition-box">
+      <h3>🚨 Signs She's Ready (watch for 1-2 weeks)</h3>
+      <ul>
+        <li>Fights or refuses Nap 3 repeatedly</li>
+        <li>Nap 3 pushes bedtime too late (past 8pm)</li>
+        <li>Takes longer to fall asleep at bedtime</li>
+        <li>Night sleep gets disrupted (more wakes)</li>
+        <li>Nap 1 or Nap 2 getting longer on their own</li>
+      </ul>
+    </div>
+
+    <div class="changes-box">
+      <h3>📋 What Changes</h3>
+      <table class="changes-table">
+        <thead>
+          <tr>
+            <th>Parameter</th>
+            <th>3 Naps (before)</th>
+            <th>2 Naps (after)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Wake windows</strong></td>
+            <td class="old">2 → 2.25 → 2.5 → 3h</td>
+            <td class="new">2.5 → 3 → 4h</td>
+          </tr>
+          <tr>
+            <td><strong>Nap 1</strong></td>
+            <td class="old">~9am, 1h</td>
+            <td class="new">9:30am, 1h (cap it)</td>
+          </tr>
+          <tr>
+            <td><strong>Nap 2</strong></td>
+            <td class="old">~12pm, 1.25h</td>
+            <td class="new">1:30pm, 1.5h ⭐</td>
+          </tr>
+          <tr>
+            <td><strong>Nap 3</strong></td>
+            <td class="old">~4pm, 0.5h</td>
+            <td class="new">❌ Dropped</td>
+          </tr>
+          <tr>
+            <td><strong>Total day sleep</strong></td>
+            <td class="old">2.75–3.25h</td>
+            <td class="new">2.5–3h</td>
+          </tr>
+          <tr>
+            <td><strong>Bedtime</strong></td>
+            <td class="old">7:30pm</td>
+            <td class="new">6:30–7pm (earlier!)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pattern">
+      <strong>New Pattern:</strong> Eat → Play → Sleep &nbsp;|&nbsp;
+      <strong>Feeds:</strong> 7am • 11am • 3:30pm • 6:30pm (4 × 7oz = 28oz)
+    </div>
+
+    <table class="schedule-table">
+      <thead>
+        <tr>
+          <th style="width: 22%">Time</th>
+          <th style="width: 40%">Activity</th>
+          <th style="width: 19%">Wake Window</th>
+          <th style="width: 19%">Feed Gap</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="feed-row">
+          <td class="time">7:00am</td>
+          <td>Wake + FEED 1 (7oz)</td>
+          <td class="window">—</td>
+          <td class="gap">12.5h</td>
+        </tr>
+        <tr class="nap-row">
+          <td class="time">9:30–10:30am</td>
+          <td>NAP 1 (1h) — cap it</td>
+          <td class="window">2.5h</td>
+          <td class="gap">—</td>
+        </tr>
+        <tr class="feed-row">
+          <td class="time">11:00am</td>
+          <td>FEED 2 (7oz)</td>
+          <td class="window">—</td>
+          <td class="gap">4h</td>
+        </tr>
+        <tr class="nap-row">
+          <td class="time">1:30–3:00pm</td>
+          <td>NAP 2 (1.5h) ⭐ circadian sweet spot</td>
+          <td class="window">3h</td>
+          <td class="gap">—</td>
+        </tr>
+        <tr class="feed-row">
+          <td class="time">3:30pm</td>
+          <td>FEED 3 (7oz)</td>
+          <td class="window">—</td>
+          <td class="gap">4.5h</td>
+        </tr>
+        <tr>
+          <td class="time">6:00pm</td>
+          <td>Bath</td>
+          <td class="window">—</td>
+          <td class="gap">—</td>
+        </tr>
+        <tr class="feed-row">
+          <td class="time">6:30pm</td>
+          <td>FEED 4 (7oz)</td>
+          <td class="window">—</td>
+          <td class="gap">3h</td>
+        </tr>
+        <tr class="bed-row">
+          <td class="time">7:00pm</td>
+          <td>🌙 BEDTIME (12h)</td>
+          <td class="window">4h</td>
+          <td class="gap">—</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="totals">
+      <span><strong>Day Sleep:</strong> 2.5h</span>
+      <span><strong>Night Sleep:</strong> 12h</span>
+      <span><strong>Total:</strong> 14.5h</span>
+    </div>
+
+    <div class="notes-container">
+      <div class="notes-column">
+        <div class="notes-section">
+          <h3>🔒 Fixed (Non-Negotiable)</h3>
+          <ul class="fixed-list">
+            <li><strong>Wake:</strong> 7:00am (±30 min)</li>
+            <li><strong>Wake windows:</strong> 2.5 → 3 → 4h</li>
+            <li><strong>Last window:</strong> 4h</li>
+            <li><strong>Nap 2:</strong> Start 1–2pm (1:30 ideal)</li>
+            <li><strong>Bedtime:</strong> 6:30–7:30pm</li>
+            <li><strong>Day sleep:</strong> 2.5–3.5h</li>
+          </ul>
+        </div>
+        <div class="priority-box">
+          <h3>⚡ Priority (When Off Track)</h3>
+          <ol>
+            <li>Bedtime (6:30–7:30pm)</li>
+            <li>Nap 2 timing (1–3pm)</li>
+            <li>Last wake window (3.5h)</li>
+            <li>Total daytime sleep</li>
+          </ol>
+        </div>
+      </div>
+      <div class="notes-column">
+        <div class="tips-box">
+          <h3>💡 Transition Tips</h3>
+          <p><strong>Week 1-2:</strong> Bedtime may need to be as early as 6pm</p>
+          <p><strong>Expect crankiness:</strong> She's adjusting to longer wake windows</p>
+          <p><strong>Don't go back:</strong> Once started, commit to 2 naps (going back and forth is confusing)</p>
+          <p><strong>Nap 2 may lengthen:</strong> She'll consolidate sleep into fewer, longer naps</p>
+          <p><strong>Night sleep may improve:</strong> More sleep pressure = deeper night sleep</p>
+        </div>
+        <div class="notes-section" style="margin-top: 8px;">
+          <h3>⚠️ During Transition</h3>
+          <ul>
+            <li>If she seems overtired by 5pm, do 6pm bedtime</li>
+            <li>Some days she may still need a cat nap — that's OK</li>
+            <li>Full adjustment takes 2-4 weeks</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showTab(tabId) {
+      // Hide all tabs
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+
+      // Show selected tab
+      document.getElementById(tabId).classList.add('active');
+      event.target.classList.add('active');
+    }
+  </script>
+</body>
+</html>
