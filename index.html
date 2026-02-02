@@ -365,6 +365,7 @@
     <button class="tab active" onclick="showTab('tab1')">3-Nap (6:30am)</button>
     <button class="tab" onclick="showTab('tab2')">3-Nap (7am Simple)</button>
     <button class="tab" onclick="showTab('tab3')">2-Nap Transition</button>
+    <button class="tab" onclick="showTab('tab4')">Sleep Training</button>
   </div>
 
   <!-- TAB 1: 3-Nap Schedule v1 (6:30am wake) -->
@@ -897,6 +898,185 @@
             <li>Some days she may still need a cat nap — that's OK</li>
             <li>Full adjustment takes 2-4 weeks</li>
           </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 4: Sleep Training Protocol -->
+  <div id="tab4" class="tab-content">
+    <h1 class="page-title">Sleep Training Protocol (Ferber)</h1>
+    <h1>😴 Sleep Training</h1>
+    <p class="subtitle">Modified Ferber (Graduated Extinction) • Jan 2026</p>
+
+    <div class="transition-box">
+      <h3>🎯 Goal: Independent Sleep (No Pacifier)</h3>
+      <ul>
+        <li><strong>Problem:</strong> Waking 2x/night needing pacifier to go back to sleep</li>
+        <li><strong>Solution:</strong> Teach self-soothing through Ferber method</li>
+        <li><strong>Timeline:</strong> Typically 5-7 nights for significant improvement</li>
+      </ul>
+    </div>
+
+    <div class="changes-box">
+      <h3>⏱️ Check-In Intervals</h3>
+      <table class="changes-table">
+        <thead>
+          <tr>
+            <th>Night</th>
+            <th>First Wait</th>
+            <th>Second Wait</th>
+            <th>Subsequent</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Night 1</strong></td>
+            <td>3 min</td>
+            <td>5 min</td>
+            <td>10 min</td>
+          </tr>
+          <tr>
+            <td><strong>Night 2</strong></td>
+            <td>5 min</td>
+            <td>10 min</td>
+            <td>12 min</td>
+          </tr>
+          <tr>
+            <td><strong>Night 3</strong></td>
+            <td>10 min</td>
+            <td>12 min</td>
+            <td>15 min</td>
+          </tr>
+          <tr>
+            <td><strong>Night 4+</strong></td>
+            <td>12 min</td>
+            <td>15 min</td>
+            <td>15 min</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="notes-container">
+      <div class="notes-column">
+        <div class="notes-section">
+          <h3>🌙 Bedtime Routine (Same Every Night)</h3>
+          <ol>
+            <li>Bath</li>
+            <li>Feed (end 20-30 min before crib)</li>
+            <li>Pajamas / sleep sack (arms out)</li>
+            <li>Book or song (buffer between feed & sleep)</li>
+            <li>White noise on</li>
+            <li><strong>Put down awake</strong>, say goodnight, leave</li>
+          </ol>
+        </div>
+
+        <div class="priority-box">
+          <h3>✅ During Check-Ins</h3>
+          <ol>
+            <li><strong>Brief:</strong> Under 15 seconds</li>
+            <li><strong>Do NOT pick up</strong></li>
+            <li><strong>Do NOT give pacifier</strong></li>
+            <li>Verbal only: "I love you, it's sleep time"</li>
+            <li>One tummy pat, then leave</li>
+          </ol>
+        </div>
+
+        <div class="notes-section">
+          <h3>👫 Who Does What</h3>
+          <ul class="fixed-list">
+            <li><strong>Dad:</strong> Nights 1-3 (babies protest less)</li>
+            <li><strong>Mom:</strong> Rest! Earplugs / sleep elsewhere</li>
+            <li><strong>After Night 3:</strong> Either parent can respond</li>
+            <li><strong>Critical:</strong> BOTH must stay consistent — no caving!</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="notes-column">
+        <div class="notes-section">
+          <h3>📅 What to Expect</h3>
+          <ul>
+            <li><strong>Night 1-2:</strong> Hardest. May cry 45-60 min. Normal!</li>
+            <li><strong>Night 3-4:</strong> ⚠️ EXTINCTION BURST — often WORSE (she's fighting the change). Don't quit!</li>
+            <li><strong>Night 5-7:</strong> Significant improvement, 10-15 min crying</li>
+            <li><strong>Week 2+:</strong> New normal — fuss briefly, settles quickly</li>
+          </ul>
+        </div>
+
+        <div class="tips-box">
+          <h3>🌃 Night Wakings</h3>
+          <p><strong>Same intervals</strong> as bedtime</p>
+          <p><strong>No pacifier, no picking up</strong></p>
+          <p><strong>No feeding</strong> — she can go 11+ hrs without food</p>
+          <p><strong>Pre-6am wake?</strong> Treat as night waking (don't start day early)</p>
+        </div>
+
+        <div class="transition-box" style="margin-top: 8px;">
+          <h3>🚨 If Checks Make It Worse</h3>
+          <ul>
+            <li>If she calms during check, screams harder when you leave → switch to <strong>extinction</strong> (no checks)</li>
+            <li>Trigger: 3x in a row = switch for that night</li>
+            <li>Or try verbal-only from doorway</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="late-wake-box" style="background: #f0fff4; border-color: #68d391;">
+      <h3 style="color: #276749;">💤 Naps: Different Rules</h3>
+      <table class="late-wake-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Naps</th>
+            <th>Nights</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Priority</strong></td>
+            <td>Secondary</td>
+            <td><strong>Primary</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Pacifier</strong></td>
+            <td>No</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td><strong>Rescue (rock/stroller/car)</strong></td>
+            <td>✅ Yes — prevents overtired</td>
+            <td>❌ Never</td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="font-size: 8pt; margin-top: 4px;"><strong>Nap protocol:</strong> Try putting down awake → Wait 10-15 min → If not settling → Rescue nap (any method)</p>
+    </div>
+
+    <div class="notes-container">
+      <div class="notes-column">
+        <div class="notes-section">
+          <h3>🔒 Environment Setup</h3>
+          <ul class="fixed-list">
+            <li><strong>Room:</strong> Move crib to nursery (fresh start)</li>
+            <li><strong>Pacifier:</strong> Cold turkey — remove ALL</li>
+            <li><strong>Sleep sack:</strong> Arms out (needs hands to self-soothe)</li>
+            <li><strong>White noise:</strong> Consistent machine (60-65 dB)</li>
+            <li><strong>Lovey:</strong> Routine only, NOT in crib (until 12 mo)</li>
+            <li><strong>Dark room:</strong> Blackout curtains</li>
+            <li><strong>Temp:</strong> 68-72°F (20-22°C)</li>
+          </ul>
+        </div>
+      </div>
+      <div class="notes-column">
+        <div class="tips-box">
+          <h3>⚠️ Emergency Only</h3>
+          <p><strong>If sick:</strong> Pause training, comfort as needed</p>
+          <p><strong>60+ min crying:</strong> Hard but normal — do NOT give in</p>
+          <p><strong>No progress after 7 nights?</strong> Check for illness, reassess method</p>
+          <p style="margin-top: 4px;"><strong>NOT emergencies:</strong> 45-60 min crying (expected), extinction burst night 3-4 (progress!), standing up (lay down during check, don't linger)</p>
         </div>
       </div>
     </div>
