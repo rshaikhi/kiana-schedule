@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kiana's Schedule</title>
+  <title>Kiana's Schedule &amp; Food Guide</title>
   <style>
     * {
       margin: 0;
@@ -376,13 +376,90 @@
         print-color-adjust: exact !important;
       }
     }
+
+    /* ---- Food & Milk Guide (11-14mo) additions ---- */
+    :root {
+      --fg-paper-raised: #ffffff;
+      --fg-ink: #1e2620;
+      --fg-ink-soft: #566152;
+      --fg-primary: #2f6b4f;
+      --fg-primary-soft: #e3eee6;
+      --fg-accent: #a13a55;
+      --fg-accent-soft: #f6e5ea;
+      --fg-line: #d9e0d3;
+      --fg-warn: #8a6d1f;
+      --fg-warn-soft: #f7edd6;
+      --fg-danger: #ac2f22;
+      --fg-danger-soft: #f7e2dd;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --fg-paper-raised: #1b231c;
+        --fg-ink: #e8ece6;
+        --fg-ink-soft: #a7b19f;
+        --fg-primary: #82c6a0;
+        --fg-primary-soft: #1f2f26;
+        --fg-accent: #e392a8;
+        --fg-accent-soft: #3a232a;
+        --fg-line: #2c352a;
+        --fg-warn: #dcb35e;
+        --fg-warn-soft: #3a2f16;
+        --fg-danger: #e58274;
+        --fg-danger-soft: #3a2420;
+      }
+    }
+    .food-guide h1 { color: var(--fg-primary); }
+    .food-guide .pattern { background: var(--fg-primary-soft); color: var(--fg-ink); }
+    .food-guide .pattern b, .food-guide .pattern strong { color: var(--fg-primary); }
+    .food-guide .page-title { color: var(--fg-primary); border-top-color: var(--fg-primary); }
+
+    h2.section-title { font-size: 13pt; font-weight: 700; color: var(--fg-primary); border-bottom: 1px solid var(--fg-line); padding-bottom: 4px; margin: 14px 0 8px; }
+    h2.section-title:first-of-type { margin-top: 0; }
+    h3.sub-title { font-size: 10pt; font-weight: 700; margin: 4px 0 6px; color: var(--fg-ink); }
+    p.lede { color: var(--fg-ink-soft); font-size: 9pt; margin-bottom: 8px; }
+    .table-wrap { overflow-x: auto; margin-bottom: 10px; }
+    table.tbl { width: 100%; border-collapse: collapse; font-size: 9pt; background: var(--fg-paper-raised); }
+    table.tbl th { background: var(--fg-primary); color: #fff; text-align: left; padding: 5px 7px; font-weight: 600; }
+    table.tbl td { padding: 4px 7px; border-bottom: 1px solid var(--fg-line); vertical-align: top; color: var(--fg-ink); }
+    table.tbl tr:last-child td { border-bottom: none; }
+    table.tbl .num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+    table.tbl tr.hl-accent td:first-child { border-left: 3px solid var(--fg-accent); }
+    table.tbl tr.hl-primary td:first-child { border-left: 3px solid var(--fg-primary); }
+    table.tbl tr.hl-warn td:first-child { border-left: 3px solid var(--fg-warn); }
+    .box { border-radius: 6px; padding: 8px 10px; margin-bottom: 10px; font-size: 9pt; border: 1px solid var(--fg-line); background: var(--fg-paper-raised); color: var(--fg-ink); }
+    .box h3 { font-size: 9pt; margin-bottom: 3px; font-weight: 700; }
+    .box ul, .box ol { padding-left: 16px; margin: 0; }
+    .box li { margin-bottom: 2px; }
+    .box p { margin: 0 0 3px; }
+    .box p:last-child { margin-bottom: 0; }
+    .box--info { background: var(--fg-primary-soft); border-color: var(--fg-primary); }
+    .box--info h3 { color: var(--fg-primary); }
+    .box--warn { background: var(--fg-warn-soft); border-color: var(--fg-warn); }
+    .box--warn h3 { color: var(--fg-warn); }
+    .box--danger { background: var(--fg-danger-soft); border-color: var(--fg-danger); }
+    .box--danger h3 { color: var(--fg-danger); }
+    .box--accent { background: var(--fg-accent-soft); border-color: var(--fg-accent); }
+    .box--accent h3 { color: var(--fg-accent); }
+    .two-col { display: flex; gap: 10px; flex-wrap: wrap; }
+    .two-col > * { flex: 1 1 260px; }
+    footer.sources { margin-top: 16px; padding-top: 8px; border-top: 1px solid var(--fg-line); font-size: 7.5pt; color: var(--fg-ink-soft); }
+
+    @media print {
+      .food-guide .box, .food-guide table.tbl { background: #fff; }
+    }
   </style>
 </head>
 <body>
 
   <!-- Tabs (hidden when printing) -->
   <div class="tabs">
-    <button class="tab active" onclick="showTab('tab6')">⭐ 8mo Current (2-Nap + Solids)</button>
+    <button class="tab active" onclick="showTab('foodOverview')">🥑 3-Month Food Roadmap</button>
+    <button class="tab" onclick="showTab('foodM11')">🥑 11 Months</button>
+    <button class="tab" onclick="showTab('foodM12')">🥑 12mo Milk Switch</button>
+    <button class="tab" onclick="showTab('foodM13')">🥑 13-14 Months</button>
+    <button class="tab" onclick="showTab('foodNutrients')">🥑 Nutrient Sheet</button>
+    <button class="tab" onclick="showTab('foodWater')">🥑 Water &amp; Milk Ref</button>
+    <button class="tab" onclick="showTab('tab6')">⭐ 8mo Current (2-Nap + Solids)</button>
     <button class="tab" onclick="showTab('tab1')">3-Nap (6:30am)</button>
     <button class="tab" onclick="showTab('tab2')">3-Nap (7am Simple)</button>
     <button class="tab" onclick="showTab('tab3')">2-Nap Transition</button>
@@ -390,8 +467,353 @@
     <button class="tab" onclick="showTab('tab5')">Early Wake Recovery</button>
   </div>
 
+  <!-- FOOD TAB 1: 3-Month Roadmap -->
+  <div id="foodOverview" class="tab-content food-guide active">
+    <h1 class="page-title">3-Month Food Roadmap (11-14 Months)</h1>
+    <h1>🥑 Kiana's Food &amp; Milk Guide</h1>
+    <p class="subtitle">11 → 14 months • Jul-Oct 2026 • nutrients, portions, timing, milk &amp; water</p>
+
+    <p class="lede">Born Aug 7, 2025 — she turns 12 months on <strong>Aug 7</strong> and 14 months on <strong>Oct 7, 2026</strong>. The single biggest event in this window is the <strong>formula → whole milk switch at 12 months</strong> — everything else shifts around it.</p>
+
+    <div class="table-wrap">
+      <table class="tbl">
+        <thead>
+          <tr><th style="width:16%">&nbsp;</th><th>11 months (now)</th><th>12 months</th><th>13-14 months</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Milk</strong></td>
+            <td>24-30oz <strong>formula</strong>/day, 3-4 bottles</td>
+            <td class="hl-accent">Switch to <strong>whole milk</strong> over ~1 week. Target 16-20oz/day</td>
+            <td>Whole milk 16-20oz/day, <strong>hard cap 24oz</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Meals</strong></td>
+            <td>3 meals + 1-2 snacks. Formula-or-solids-first, either order</td>
+            <td>3 meals + 2 snacks. Solids-first becomes the default</td>
+            <td>3 meals + 2 snacks. Solids are primary calories</td>
+          </tr>
+          <tr>
+            <td><strong>Water</strong></td>
+            <td>2-4oz/day, <strong>max 8oz</strong>, with meals only</td>
+            <td class="hl-accent">Rule flips — can offer between meals too. Climbing to 4-8oz+</td>
+            <td>8-32oz/day (1-4 cups), offered freely</td>
+          </tr>
+          <tr>
+            <td><strong>Texture</strong></td>
+            <td>Soft chopped pieces, some lumps, pincer practice</td>
+            <td>Mostly minced/diced table food</td>
+            <td>Regular family table food (still no hard chokables)</td>
+          </tr>
+          <tr>
+            <td><strong>Vessel</strong></td>
+            <td>Bottle for milk, straw/open cup for water practice</td>
+            <td class="hl-accent">Start weaning bottle → cup, daytime feeds first</td>
+            <td>Cup for everything, bottle retired</td>
+          </tr>
+          <tr>
+            <td><strong>Newly allowed</strong></td>
+            <td>—</td>
+            <td class="hl-accent">Honey, cow's milk as a drink</td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="two-col">
+      <div class="box box--info">
+        <h3>The one thing to get right each month</h3>
+        <ul>
+          <li><strong>11mo:</strong> keep iron-rich food in every meal — the biggest nutritional risk this year</li>
+          <li><strong>12mo:</strong> don't overshoot milk volume once she's on whole milk — it quietly displaces the iron she needs</li>
+          <li><strong>13-14mo:</strong> get the bottle fully retired — the longer it lingers, the harder it is to drop</li>
+        </ul>
+      </div>
+      <div class="box box--warn">
+        <h3>Also worth knowing</h3>
+        <ul>
+          <li><strong>Appetite may visibly drop after 12 months</strong> — growth velocity slows a lot after the first birthday. Less eating isn't a red flag on its own.</li>
+          <li><strong>Choking hazards don't end at 12 months</strong> — whole grapes, nuts, popcorn, hard candy stay off-limits to age 4.</li>
+          <li><strong>Messy self-feeding is progress, not regression</strong> — it's how pincer grasp and utensil skill build.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="box box--accent">
+      <h3>Ask at the 12-month well-visit</h3>
+      <ul>
+        <li><strong>Vitamin D:</strong> once formula stops, does she need a supplement drop? (Common in Canada given lower sun exposure — depends on how much fortified milk she actually drinks.)</li>
+        <li><strong>Iron / anemia screen:</strong> many pediatricians check hemoglobin around 12 months, especially for formula-fed babies transitioning off fortified milk — worth confirming it's on the visit checklist.</li>
+        <li><strong>Fluoride:</strong> teeth are erupting — ask whether varnish or supplementation is recommended.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- FOOD TAB 2: 11 Months -->
+  <div id="foodM11" class="tab-content food-guide">
+    <h1 class="page-title">11 Months (Now)</h1>
+    <h1>🥑 11 Months (Now)</h1>
+    <p class="subtitle">Current stage • Jul 2026</p>
+
+    <div class="pattern"><strong>24-30oz formula</strong>/day &middot; <strong>3 meals + 1-2 snacks</strong> &middot; <strong>Water 2-4oz</strong> with meals (max 8oz) &middot; Formula-or-solids-first, either order is fine now</div>
+
+    <h2 class="section-title">Priority Nutrients</h2>
+    <div class="table-wrap">
+      <table class="tbl">
+        <thead><tr><th>Nutrient</th><th>Why it matters</th><th>Best sources</th></tr></thead>
+        <tbody>
+          <tr class="hl-accent"><td><strong>🥇 Iron</strong></td><td>Maternal stores long depleted. Biggest nutrition risk of the year.</td><td>Red meat, chicken thigh, iron-fortified cereal, lentils, beans, egg yolk</td></tr>
+          <tr><td><strong>🥈 Fat</strong></td><td>40-50% of calories — brain is still rapidly growing</td><td>Avocado, full-fat yogurt, olive oil, butter, salmon, thinned nut butters</td></tr>
+          <tr><td><strong>🥉 Protein</strong></td><td>~11g/day target for growth</td><td>Meat, eggs, yogurt, tofu, beans, fish</td></tr>
+          <tr><td>Zinc</td><td>Immune function, pairs with iron</td><td>Red meat, poultry, dairy</td></tr>
+          <tr><td>DHA / Omega-3</td><td>Brain and retina development</td><td>Salmon, sardines, egg yolk</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="section-title">Example Day</h2>
+    <div class="table-wrap">
+      <table class="tbl">
+        <thead><tr><th style="width:20%">Timing</th><th style="width:44%">Meal &amp; Example Foods</th><th style="width:18%">Amount</th><th style="width:18%">Milk / Water</th></tr></thead>
+        <tbody>
+          <tr><td>On waking</td><td>Bottle</td><td class="num">7-8oz formula</td><td>—</td></tr>
+          <tr class="hl-primary"><td>Breakfast</td><td>Oatmeal + mashed avocado + smashed strawberry</td><td class="num">4-6 Tbsp total</td><td class="num">1-2oz water</td></tr>
+          <tr><td>Mid-morning</td><td>Bottle</td><td class="num">6-7oz formula</td><td>—</td></tr>
+          <tr class="hl-primary"><td>Lunch</td><td>Shredded chicken + sweet potato wedges + full-fat yogurt</td><td class="num">4-6 Tbsp total</td><td class="num">1-2oz water</td></tr>
+          <tr><td>Afternoon snack</td><td>Cheese strips + soft pear slices</td><td class="num">2-3 Tbsp</td><td>—</td></tr>
+          <tr><td>Late afternoon</td><td>Bottle</td><td class="num">6-7oz formula</td><td>—</td></tr>
+          <tr class="hl-primary"><td>Dinner (family meal)</td><td>Lentil mash + buttered rice + banana</td><td class="num">4-6 Tbsp total</td><td class="num">1-2oz water</td></tr>
+          <tr><td>Before bed</td><td>Bottle</td><td class="num">6-7oz formula</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="lede">Total formula: ~24-30oz across 3-4 bottles. Solids are for nutrients and skill-building — formula still covers most calories until 12 months.</p>
+
+    <div class="two-col">
+      <div class="box box--info">
+        <h3>Portion sizes right now</h3>
+        <ul>
+          <li>Per meal: <strong>1/4 to 1/2 cup</strong> total across all foods on the plate</li>
+          <li>Fruit: keep to <strong>~1/3 of the plate max</strong> — it's easy to over-fill on fruit and miss iron</li>
+          <li>Pair iron with vitamin C (strawberries, kiwi, bell pepper, orange segments) — <strong>2-3x better absorption</strong></li>
+        </ul>
+      </div>
+      <div class="box box--danger">
+        <h3>Still off-limits</h3>
+        <ul>
+          <li>Honey (botulism risk until 12 months)</li>
+          <li>Cow's milk as a drink (fine in cooking/yogurt)</li>
+          <li>Added salt, added sugar</li>
+          <li>Whole grapes, blueberries, cherry tomatoes, nuts, popcorn</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOD TAB 3: 12 Months -->
+  <div id="foodM12" class="tab-content food-guide">
+    <h1 class="page-title">12 Months - The Milk Switch</h1>
+    <h1>🥑 12 Months — The Milk Switch</h1>
+    <p class="subtitle">Aug 2026</p>
+
+    <div class="pattern"><strong>Formula → whole milk</strong>, phased over ~1 week &middot; Target <strong>16-20oz/day</strong>, hard cap <strong>24oz</strong> &middot; Bottle → cup weaning starts &middot; Honey now allowed</div>
+
+    <h2 class="section-title">Formula → Whole Milk, Day by Day</h2>
+    <p class="lede">A gradual swap avoids a flat-out refusal — formula and milk taste different. Do this in her cup, not the bottle, where possible.</p>
+    <div class="table-wrap">
+      <table class="tbl">
+        <thead><tr><th style="width:20%">Days</th><th>Mix</th></tr></thead>
+        <tbody>
+          <tr><td class="num">Day 1-2</td><td>3/4 formula + 1/4 whole milk</td></tr>
+          <tr><td class="num">Day 3-4</td><td>Half formula + half whole milk</td></tr>
+          <tr><td class="num">Day 5-6</td><td>1/4 formula + 3/4 whole milk</td></tr>
+          <tr class="hl-accent"><td class="num">Day 7+</td><td><strong>Full whole milk</strong> (pasteurized, homogenized — not skim/2% before age 2)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="box box--danger">
+      <h3>⚠️ Don't overshoot milk volume — "milk anemia" is real</h3>
+      <p><strong>Target 16-20oz/day. Never exceed 24oz/day.</strong></p>
+      <p>Whole milk has essentially no iron, and too much of it does two things at once: it fills her up so she eats less iron-rich food, and heavy cow's-milk intake can itself cause small amounts of GI blood loss in toddlers. This combination is the single most common cause of iron-deficiency anemia at this age. If she seems to want more milk than that, offer water or food instead.</p>
+    </div>
+
+    <h2 class="section-title">Bottle → Cup Weaning</h2>
+    <div class="two-col">
+      <div class="box box--info">
+        <h3>Order to drop bottles</h3>
+        <ol>
+          <li>Daytime bottles first — replace with cup at meals</li>
+          <li>Mid-day/nap-adjacent bottles next</li>
+          <li><strong>Bedtime bottle last</strong> — but move milk itself to a cup earlier in the evening routine, then keep the bedtime step as book/song instead of a bottle</li>
+        </ol>
+        <p>AAP target: start at 12 months, <strong>fully off the bottle by 18 months</strong> — this plan aims to finish by 14 months so it doesn't linger.</p>
+      </div>
+      <div class="box box--warn">
+        <h3>Why the bottle has to go</h3>
+        <ul>
+          <li>Prolonged bottle use is linked to tooth decay and overconsumption of milk</li>
+          <li><strong>Never put her to bed with a bottle</strong> — pooled milk on teeth overnight is a major cavity risk</li>
+          <li>The longer the bottle stays, the more it competes with food and cup practice</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="section-title">Newly Allowed at 12 Months</h2>
+    <div class="table-wrap">
+      <table class="tbl">
+        <thead><tr><th>Food</th><th>Why it was restricted before</th><th>How to introduce</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Honey</strong></td><td>Botulism risk in infant gut before 12mo</td><td>Cooked into baked goods or a thin drizzle on toast/yogurt — still not a spoonful on its own</td></tr>
+          <tr><td><strong>Cow's milk (as a drink)</strong></td><td>Not nutritionally complete enough to replace formula before 12mo</td><td>Via the 7-day transition above, in a cup</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="box box--accent">
+      <h3>Water rule flips this month</h3>
+      <p>Until now: water only with meals, capped at 8oz/day. <strong>At 12 months this reverses</strong> — she can have water between meals too, and the target climbs toward the 12-24 month range (see the Water &amp; Milk Ref tab).</p>
+    </div>
+  </div>
+
+  <!-- FOOD TAB 4: 13-14 Months -->
+  <div id="foodM13" class="tab-content food-guide">
+    <h1 class="page-title">13-14 Months - Table Foods</h1>
+    <h1>🥑 13-14 Months — Table Foods</h1>
+    <p class="subtitle">Sep-Oct 2026</p>
+
+    <div class="pattern"><strong>3 meals + 2 snacks</strong> &middot; Solids are <strong>primary calories</strong> now &middot; Milk 16-20oz/day, cap 24oz &middot; Cup only, bottle retired</div>
+
+    <h2 class="section-title">Example Day</h2>
+    <div class="table-wrap">
+      <table class="tbl">
+        <thead><tr><th style="width:20%">Timing</th><th style="width:44%">Meal &amp; Example Foods</th><th style="width:18%">Amount</th><th style="width:18%">Milk / Water</th></tr></thead>
+        <tbody>
+          <tr><td>On waking</td><td>Cup of milk</td><td class="num">4-6oz</td><td>—</td></tr>
+          <tr class="hl-primary"><td>Breakfast</td><td>Scrambled egg + diced toast + banana slices</td><td class="num">1/4-1/2 cup total</td><td class="num">Water, offered freely</td></tr>
+          <tr><td>Mid-morning snack</td><td>Cheese cubes + soft melon pieces</td><td class="num">2-4 Tbsp</td><td>—</td></tr>
+          <tr class="hl-primary"><td>Lunch</td><td>Beef and vegetable stew, diced, over rice</td><td class="num">1/4-1/2 cup total</td><td class="num">4-6oz milk</td></tr>
+          <tr><td>Afternoon snack</td><td>Yogurt with mashed berries</td><td class="num">1/4 cup</td><td>—</td></tr>
+          <tr class="hl-primary"><td>Dinner (family meal)</td><td>Salmon flakes + roasted vegetables + pasta</td><td class="num">1/4-1/2 cup total</td><td class="num">Water, offered freely</td></tr>
+          <tr><td>Before bed</td><td>Cup of milk (with dinner or shortly after, not as a sleep prop)</td><td class="num">4-6oz</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="two-col">
+      <div class="box box--info">
+        <h3>What's different now</h3>
+        <ul>
+          <li>Diced/minced family table food instead of purees or gnaw-strips</li>
+          <li>Spoon self-feeding attempts at every meal, even if most of it misses</li>
+          <li>Two snacks a day are normal to bridge growing wake windows between meals</li>
+          <li>Milk moves fully into meals from a cup — no more all-day bottle grazing</li>
+        </ul>
+      </div>
+      <div class="box box--danger">
+        <h3>Choking hazards — still off-limits to age 4</h3>
+        <ul>
+          <li>Whole grapes, cherry tomatoes, blueberries — quarter or smash</li>
+          <li>Whole nuts, popcorn, hard candy</li>
+          <li>Chunks of meat — keep shredded/diced small</li>
+          <li>Spoonfuls of nut butter — thin it or spread thin</li>
+          <li>Hot dogs — quartered lengthwise if served at all</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOD TAB 5: Nutrient & Portion Cheat Sheet -->
+  <div id="foodNutrients" class="tab-content food-guide">
+    <h1 class="page-title">Nutrient &amp; Portion Cheat Sheet</h1>
+    <h1>🥕 Nutrient &amp; Portion Cheat Sheet</h1>
+    <p class="subtitle">12-24 months reference</p>
+
+    <h2 class="section-title">Daily Nutrient Targets (12-24 months)</h2>
+    <div class="table-wrap">
+      <table class="tbl">
+        <thead><tr><th>Nutrient</th><th style="width:14%">Daily target</th><th>Why</th><th>Best sources</th></tr></thead>
+        <tbody>
+          <tr class="hl-accent"><td><strong>Iron</strong></td><td class="num">7mg</td><td>Whole milk has ~0 iron — this is the nutrient most likely to fall short once formula stops</td><td>Red meat, poultry, fortified cereal, lentils, beans, egg yolk</td></tr>
+          <tr><td><strong>Calcium</strong></td><td class="num">700mg</td><td>Bone and teeth mineralization</td><td>Whole milk, yogurt, cheese, fortified foods</td></tr>
+          <tr><td><strong>Protein</strong></td><td class="num">~13g</td><td>Growth</td><td>Meat, egg, dairy, beans, fish, tofu</td></tr>
+          <tr><td><strong>Fat</strong></td><td class="num">30-40% of calories</td><td>Brain is still ~2/3 adult size and growing fast — don't go low-fat before age 2</td><td>Whole milk, avocado, olive oil, cheese, thinned nut butter</td></tr>
+          <tr><td><strong>Zinc</strong></td><td class="num">3mg</td><td>Immune function, growth</td><td>Meat, dairy, beans</td></tr>
+          <tr><td><strong>DHA / Omega-3</strong></td><td class="num">~70-100mg</td><td>Brain and retina development</td><td>Salmon, sardines, egg yolk, DHA-fortified milk</td></tr>
+          <tr><td><strong>Vitamin D</strong></td><td class="num">600 IU</td><td>Bone health, calcium absorption</td><td>Fortified milk, sunlight, supplement drops if milk intake is capped low</td></tr>
+          <tr><td><strong>Fiber</strong></td><td class="num">~19g</td><td>Digestion, prevents constipation</td><td>Fruits, vegetables, whole grains</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="section-title">Portion Size by Food Group (per meal, 12-24 months)</h2>
+    <div class="table-wrap">
+      <table class="tbl">
+        <thead><tr><th>Food group</th><th style="width:24%">Portion</th><th>Examples</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Grains</strong></td><td class="num">1/4-1/2 slice bread, or 2-4 Tbsp cooked</td><td>Rice, pasta, oatmeal, toast</td></tr>
+          <tr><td><strong>Fruit</strong></td><td class="num">2-4 Tbsp chopped</td><td>Banana, berries, melon, pear</td></tr>
+          <tr><td><strong>Vegetables</strong></td><td class="num">2-4 Tbsp cooked</td><td>Sweet potato, carrot, broccoli, squash</td></tr>
+          <tr><td><strong>Protein</strong></td><td class="num">2-4 Tbsp, or 1/4 cup beans, or 1 egg</td><td>Meat, poultry, fish, tofu, lentils</td></tr>
+          <tr><td><strong>Dairy</strong></td><td class="num">1/2 cup milk, or 1-2oz cheese, or 1/4-1/2 cup yogurt</td><td>Whole milk, cheese, plain full-fat yogurt</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="lede">These are per-meal reference amounts, not minimums to enforce — appetite-led eating is still the rule before age 2.</p>
+  </div>
+
+  <!-- FOOD TAB 6: Water & Milk Quick Reference -->
+  <div id="foodWater" class="tab-content food-guide">
+    <h1 class="page-title">Water &amp; Milk - Quick Reference</h1>
+    <h1>💧 Water &amp; Milk — Quick Reference</h1>
+    <p class="subtitle">11-14 months</p>
+
+    <div class="table-wrap">
+      <table class="tbl">
+        <thead><tr><th>Age</th><th>Water/day</th><th>Timing rule</th><th>Milk or formula/day</th><th>Vessel</th></tr></thead>
+        <tbody>
+          <tr><td><strong>11 months</strong></td><td class="num">2-4oz (max 8oz)</td><td>With meals only, never between feeds</td><td class="num">24-30oz formula</td><td>Bottle for formula; open/straw cup for water</td></tr>
+          <tr class="hl-accent"><td><strong>12 months</strong></td><td class="num">Climbing to 4-8oz+</td><td>Rule flips — anytime, between meals is fine now</td><td class="num">Switch to whole milk, 16-20oz</td><td>Move formula/milk from bottle to cup</td></tr>
+          <tr><td><strong>13-14 months</strong></td><td class="num">8-32oz (1-4 cups)</td><td>Anytime, follow her thirst</td><td class="num">Whole milk 16-20oz, cap 24oz</td><td>Cup only, bottle retired</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="two-col">
+      <div class="box box--danger">
+        <h3>Milk-anemia risk (12mo+)</h3>
+        <p>More than <strong>24oz/day</strong> of whole milk is the biggest single dietary risk after the switch — it displaces iron-rich food and can worsen iron absorption. Cap it even if she'd happily drink more.</p>
+      </div>
+      <div class="box box--warn">
+        <h3>Water intoxication (still relevant pre-12mo)</h3>
+        <p>Infant kidneys can't clear a big water load until closer to 12 months. Stay inside the 11-month cap of <strong>8oz/day</strong> until the water-rule flip. Never dilute formula to "stretch" it.</p>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="box box--info">
+        <h3>Vessel — open cup or straw, never hard-spout sippy</h3>
+        <p>Hard sippy spouts block the tongue-elevation pattern needed for clear speech (t, d, n, l sounds) and can contribute to an open bite. Stick with an open cup or a soft silicone straw all the way through this transition.</p>
+      </div>
+      <div class="box box--danger">
+        <h3>During illness, still use Pedialyte</h3>
+        <p>For diarrhea or vomiting, plain water still isn't the right rehydration tool at this age — an oral rehydration solution (Pedialyte) replaces electrolytes that plain water doesn't.</p>
+      </div>
+    </div>
+
+    <div class="box box--warn">
+      <h3>Never put her to bed with a bottle</h3>
+      <p>Once milk moves into a bottle at all stages of this transition, keep it out of the crib. Pooled milk on erupting teeth overnight is a leading cause of early childhood cavities, and it undermines bottle weaning.</p>
+    </div>
+
+    <footer class="sources">
+      Sources: American Academy of Pediatrics (AAP), Centers for Disease Control and Prevention (CDC), Canadian Paediatric Society (CPS), NIH Office of Dietary Supplements (nutrient reference intakes). Synthesized reference for planning — confirm anything unusual (reactions, feeding refusal, growth concerns) with Kiana's pediatrician.
+    </footer>
+  </div>
+
   <!-- TAB 6: 8-Month Current Schedule (2-Nap + Solids) -->
-  <div id="tab6" class="tab-content active" style="font-size: 9pt; line-height: 1.25;">
+  <div id="tab6" class="tab-content" style="font-size: 9pt; line-height: 1.25;">
     <h1 class="page-title">8-Month Current (2-Nap + Solids)</h1>
     <h1 style="font-size: 14pt; margin-bottom: 2px;">🍼 Kiana's Schedule</h1>
     <p class="subtitle" style="margin-bottom: 6px;">8 months • 7:00am DWT • 2-Nap + 3 Solid Meals • Apr 2026</p>
